@@ -1,0 +1,39 @@
+<!-- Simple Hotel Image for Social Media Sharing -->
+<!-- This is a placeholder JPG for social media preview -->
+
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="nepalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F7931E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#nepalGradient)"/>
+  
+  <!-- Mountains silhouette -->
+  <path d="M0 400 L150 350 L300 380 L450 320 L600 360 L750 340 L900 380 L1050 400 L1200 420 L1200 630 L0 630 Z" 
+        fill="#2D3748" opacity="0.8"/>
+  
+  <!-- Sun -->
+  <circle cx="900" cy="150" r="40" fill="#FBBF24" opacity="0.9"/>
+  
+  <!-- Hotel buildings -->
+  <rect x="100" y="380" width="60" height="80" fill="#1F2937" rx="4"/>
+  <rect x="300" y="360" width="80" height="100" fill="#1F2937" rx="4"/>
+  <rect x="500" y="370" width="70" height="90" fill="#1F2937" rx="4"/>
+  <rect x="700" y="350" width="90" height="110" fill="#1F2937" rx="4"/>
+  
+  <!-- Text -->
+  <text x="600" y="200" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">
+    Nepal Stays
+  </text>
+  <text x="600" y="250" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">
+    Book Hotels Across Nepal
+  </text>
+  <text x="600" y="280" font-family="Arial, sans-serif" font-size="18" fill="#FED7AA" text-anchor="middle">
+    Kathmandu • Pokhara • Chitwan • Lumbini
+  </text>
+</svg>
