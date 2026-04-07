@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
+import { ThemeSelectionDialog } from "./theme-selection-dialog"
 
-type Theme = "dark" | "light" | "system"
+type Theme = "dark" | "light"
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -22,31 +23,37 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "light",
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => {
+      const saved = localStorage.getItem(storageKey) as Theme
+      if (saved) {
+        return saved
+      }
+      return defaultTheme
+    }
   )
+
+  const [showThemeDialog, setShowThemeDialog] = useState(false)
 
   useEffect(() => {
     const root = window.document.documentElement
 
     root.classList.remove("light", "dark")
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light"
-
-      root.classList.add(systemTheme)
-      return
-    }
-
     root.classList.add(theme)
   }, [theme])
+
+  useEffect(() => {
+    const hasSeenThemeSelection = localStorage.getItem(`${storageKey}-seen`)
+    
+    if (!hasSeenThemeSelection) {
+      setShowThemeDialog(true)
+    }
+  }, [])
 
   const value = {
     theme,
@@ -54,12 +61,27 @@ export function ThemeProvider({
       localStorage.setItem(storageKey, theme)
       setTheme(theme)
     },
+    showThemeDialog,
+    setShowThemeDialog
   }
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
-    </ThemeProviderContext.Provider>
+    <>
+      <ThemeProviderContext.Provider {...props} value={value}>
+        {children}
+      </ThemeProviderContext.Provider>
+      
+      {showThemeDialog && (
+        <ThemeSelectionDialog
+          isOpen={showThemeDialog}
+          onClose={() => setShowThemeDialog(false)}
+          onSelectTheme={(selectedTheme) => {
+            setTheme(selectedTheme)
+            setShowThemeDialog(false)
+          }}
+        />
+      )}
+    </>
   )
 }
 
