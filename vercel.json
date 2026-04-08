@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/hotel/:id*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/my-bookings",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
