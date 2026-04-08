@@ -14,8 +14,8 @@
 
 -- Step 1: Create the auth user in Supabase Dashboard
 -- Go to Supabase Authentication > Users > Create User
--- Email: admin@nepalstays.com
--- Password: NepalStays@2024
+-- Email: admin@gmail.com
+-- Password: admin
 -- Email confirmed: Yes
 
 -- Step 2: Set admin role for the user
@@ -25,7 +25,7 @@ SET raw_user_meta_data = jsonb_set(
   '{role}',
   '"admin"'
 )
-WHERE email = 'admin@nepalstays.com';
+WHERE email = 'admin@gmail.com';
 
 -- Step 3: Create profile record (run this after creating the auth user)
 -- Replace 'ACTUAL_USER_ID' with the UUID from the auth user
@@ -36,7 +36,7 @@ BEGIN
     -- Get the actual user ID from auth.users
     SELECT id INTO admin_user_id 
     FROM auth.users 
-    WHERE email = 'admin@nepalstays.com' 
+    WHERE email = 'admin@gmail.com' 
     LIMIT 1;
     
     IF admin_user_id IS NOT NULL THEN
@@ -56,7 +56,7 @@ BEGIN
             ) VALUES (
               admin_user_id,
               'Admin User',
-              'admin@nepalstays.com',
+              'admin@gmail.com',
               '+977-9812345678',
               NOW()
             ) ON CONFLICT (user_id) DO UPDATE SET
@@ -72,7 +72,7 @@ BEGIN
             ) VALUES (
               admin_user_id,
               'Admin User',
-              'admin@nepalstays.com',
+              'admin@gmail.com',
               NOW()
             ) ON CONFLICT (user_id) DO UPDATE SET
               full_name = EXCLUDED.full_name,
@@ -86,7 +86,7 @@ BEGIN
 END $$;
 
 -- Admin credentials:
--- Email: admin@nepalstays.com
--- Password: NepalStays@2024
+-- Email: admin@gmail.com
+-- Password: admin
 -- 4. In the user's metadata, add: {"role": "admin"}
 -- 5. Or run the UPDATE statement above to set the role
