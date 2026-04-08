@@ -65,6 +65,27 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
           .no-print {
             display: none !important;
           }
+          /* Force light colors for printing */
+          .print-area {
+            background: white !important;
+            color: black !important;
+          }
+          .print-area * {
+            color: black !important;
+            border-color: black !important;
+          }
+          .print-area .text-foreground {
+            color: #000000 !important;
+          }
+          .print-area .text-muted-foreground {
+            color: #666666 !important;
+          }
+          .print-area .bg-background {
+            background: white !important;
+          }
+          .print-area .border {
+            border-color: #000000 !important;
+          }
         }
       `}</style>
       
@@ -79,15 +100,15 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
         </Button>
       </div>
 
-      <div className="bg-white print-area">
+      <div className="bg-background print-area">
         <Card className="max-w-4xl mx-auto">
           <CardContent className="p-8">
             {/* Header */}
             <div className="mb-8">
               <div className="flex justify-between items-start">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">INVOICE</h1>
-                  <p className="text-gray-600">Invoice #{booking.id}</p>
+                  <h1 className="text-3xl font-bold text-foreground mb-2">INVOICE</h1>
+                  <p className="text-muted-foreground">Invoice #{booking.id}</p>
                 </div>
                 <div className="text-right">
                   <div className="mb-4">
@@ -100,9 +121,9 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
                         target.style.display = 'none';
                       }}
                     />
-                    <h2 className="text-xl font-bold text-gray-900">Nepal Stays</h2>
+                    <h2 className="text-xl font-bold text-foreground">Nepal Stays</h2>
                   </div>
-                  <div className="text-sm text-gray-600 space-y-1">
+                  <div className="text-sm text-muted-foreground space-y-1">
                     <p className="flex items-center gap-2"><MapPin className="h-3 w-3" /> Kathmandu, Nepal</p>
                     <p className="flex items-center gap-2"><Phone className="h-3 w-3" /> +977-1-1234567</p>
                     <p className="flex items-center gap-2"><Mail className="h-3 w-3" /> info@nepalstays.com</p>
@@ -116,24 +137,24 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
             {/* Customer and Hotel Information */}
             <div className="grid grid-cols-2 gap-8 mb-8">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Users className="h-4 w-4" /> Customer Information
                 </h3>
                 <div className="text-sm space-y-1">
                   <p className="font-medium">{userProfile?.full_name || 'Guest User'}</p>
-                  <p className="text-gray-600">{userProfile?.email || 'N/A'}</p>
-                  <p className="text-gray-600">{userProfile?.phone || booking.guest_phone || 'N/A'}</p>
+                  <p className="text-muted-foreground">{userProfile?.email || 'N/A'}</p>
+                  <p className="text-muted-foreground">{userProfile?.phone || booking.guest_phone || 'N/A'}</p>
                 </div>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Building className="h-4 w-4" /> Hotel Information
                 </h3>
                 <div className="text-sm space-y-1">
                   <p className="font-medium">{booking.hotels?.name}</p>
-                  <p className="text-gray-600">{booking.hotels?.location}</p>
+                  <p className="text-muted-foreground">{booking.hotels?.location}</p>
                   {booking.hotels?.rating && (
-                    <p className="text-gray-600">Rating: {booking.hotels.rating} stars</p>
+                    <p className="text-muted-foreground">Rating: {booking.hotels.rating} stars</p>
                   )}
                 </div>
               </div>
@@ -141,32 +162,32 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
 
             {/* Booking Details */}
             <div className="mb-8">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                 <CalendarDays className="h-4 w-4" /> Booking Details
               </h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-600">Check-in Date</p>
+                  <p className="text-muted-foreground">Check-in Date</p>
                   <p className="font-medium">{format(new Date(booking.check_in_date), 'MMMM d, yyyy')}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Check-out Date</p>
+                  <p className="text-muted-foreground">Check-out Date</p>
                   <p className="font-medium">{format(new Date(booking.check_out_date), 'MMMM d, yyyy')}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Room Type</p>
+                  <p className="text-muted-foreground">Room Type</p>
                   <p className="font-medium">{booking.room_type}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Number of Guests</p>
+                  <p className="text-muted-foreground">Number of Guests</p>
                   <p className="font-medium">{booking.guests} guest(s)</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Number of Nights</p>
+                  <p className="text-muted-foreground">Number of Nights</p>
                   <p className="font-medium">{nights} night(s)</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Status</p>
+                  <p className="text-muted-foreground">Status</p>
                   <Badge variant={booking.status === 'confirmed' ? 'default' : 'secondary'}>
                     {booking.status}
                   </Badge>
@@ -177,7 +198,7 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
             {/* Hotel Image and Description */}
             {booking.hotels?.image_url && (
               <div className="mb-8">
-                <h3 className="font-semibold text-gray-900 mb-3">Hotel</h3>
+                <h3 className="font-semibold text-foreground mb-3">Hotel</h3>
                 <div className="flex gap-4">
                   <img 
                     src={booking.hotels.image_url} 
@@ -186,7 +207,7 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
                   />
                   {booking.hotels.description && (
                     <div className="flex-1">
-                      <p className="text-sm text-gray-600">{booking.hotels.description}</p>
+                      <p className="text-sm text-muted-foreground">{booking.hotels.description}</p>
                     </div>
                   )}
                 </div>
@@ -195,16 +216,16 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
 
             {/* Payment Details */}
             <div className="mb-8">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                 <CreditCard className="h-4 w-4" /> Payment Details
               </h3>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Room Rate ({nights} nights × ${pricePerNight.toFixed(2)})</span>
+                  <span className="text-muted-foreground">Room Rate ({nights} nights × ${pricePerNight.toFixed(2)})</span>
                   <span>${booking.total_price.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Taxes & Fees</span>
+                  <span className="text-muted-foreground">Taxes & Fees</span>
                   <span>$0.00</span>
                 </div>
                 <Separator />
@@ -217,10 +238,10 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
 
             {/* Terms and Conditions */}
             <div className="mb-8">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                 <FileText className="h-4 w-4" /> Terms & Conditions
               </h3>
-              <div className="text-xs text-gray-600 space-y-1">
+              <div className="text-xs text-muted-foreground space-y-1">
                 <p>1. This invoice is for booking confirmation purposes.</p>
                 <p>2. Cancellation policy applies as per hotel terms.</p>
                 <p>3. Please present this invoice at check-in.</p>
@@ -229,7 +250,7 @@ export default function Invoice({ booking, userProfile }: InvoiceProps) {
             </div>
 
             {/* Footer */}
-            <div className="text-center text-sm text-gray-600">
+            <div className="text-center text-sm text-muted-foreground">
               <p>Thank you for choosing Nepal Stays!</p>
               <p>Booking Date: {format(new Date(booking.created_at), 'MMMM d, yyyy')}</p>
             </div>
