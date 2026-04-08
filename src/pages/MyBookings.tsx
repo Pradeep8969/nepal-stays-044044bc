@@ -67,42 +67,28 @@ export default function MyBookings() {
   const handleCancel = async (id: string) => {
     console.log('Attempting to delete booking with ID:', id);
     
-    // First check if booking exists
-    const { data: bookingData, error: checkError } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (checkError) {
-      console.error('Error checking booking:', checkError);
-      toast({ title: 'Error', description: `Error checking booking: ${checkError.message}`, variant: 'destructive' });
-      return;
-    }
-    
-    if (!bookingData) {
-      console.log('Booking not found:', id);
-      toast({ title: 'Error', description: 'Booking not found', variant: 'destructive' });
-      return;
-    }
-    
-    console.log('Found booking:', bookingData);
-    
-    // Delete the booking
-    const { error, data } = await supabase
-      .from('bookings')
-      .delete()
-      .eq('id', id);
-    
-    console.log('Delete result:', { error, data });
-    
-    if (error) {
-      console.error('Error deleting booking:', error);
-      toast({ title: 'Error', description: `Error deleting booking: ${error.message}`, variant: 'destructive' });
-    } else {
-      console.log('Booking deleted successfully');
-      toast({ title: 'Booking Cancelled', description: 'Your booking has been successfully cancelled and removed.' });
-      fetchBookings();
+    try {
+      // Use RPC function to delete booking
+      const { data, error } = await supabase.rpc('delete_user_booking', {
+        booking_id_to_delete: id
+      });
+      
+      console.log('RPC delete result:', { data, error });
+      
+      if (error) {
+        console.error('Error deleting booking via RPC:', error);
+        toast({ title: 'Error', description: `Error deleting booking: ${error.message}`, variant: 'destructive' });
+      } else if (data === true) {
+        console.log('Booking deleted successfully via RPC');
+        toast({ title: 'Booking Cancelled', description: 'Your booking has been successfully cancelled and removed.' });
+        fetchBookings();
+      } else {
+        console.error('RPC function returned false - deletion failed');
+        toast({ title: 'Error', description: 'Failed to delete booking. Please try again.', variant: 'destructive' });
+      }
+    } catch (err) {
+      console.error('Unexpected error during deletion:', err);
+      toast({ title: 'Error', description: 'An unexpected error occurred. Please try again.', variant: 'destructive' });
     }
   };
 
