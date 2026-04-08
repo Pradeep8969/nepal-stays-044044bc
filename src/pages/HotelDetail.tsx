@@ -128,15 +128,6 @@ export default function HotelDetail() {
             <CardTitle className="flex items-center gap-2"><Calendar className="h-5 w-5 text-primary" /> Book This Hotel</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Hotel Summary */}
-            <div className="rounded-lg bg-muted/50 p-3">
-              <h4 className="font-semibold text-sm mb-2">{hotel.name}</h4>
-              <p className="text-xs text-muted-foreground line-clamp-3">{hotel.description}</p>
-              <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{hotel.location}</span>
-                <span className="flex items-center gap-1"><Star className="h-3 w-3" />{hotel.rating}</span>
-              </div>
-            </div>
             <div className="space-y-2">
               <Label>Check-in</Label>
               <Input type="date" min={today} value={checkIn} onChange={e => setCheckIn(e.target.value)} />
