@@ -75,13 +75,15 @@ export default function MyBookings() {
   };
 
   const canCancel = (checkIn: string, status: string) => {
-    return status === 'confirmed' && differenceInDays(new Date(checkIn), new Date()) >= 2;
+    const validStatuses = ['confirmed', 'pending', null, undefined, ''];
+    return (validStatuses.includes(status) || !status) && differenceInDays(new Date(checkIn), new Date()) >= 2;
   };
 
-  const getCancelReason = (checkIn: string) => {
+  const getCancelReason = (checkIn: string, status: string) => {
     const daysUntilCheckIn = differenceInDays(new Date(checkIn), new Date());
     if (daysUntilCheckIn < 0) return "This booking has already passed";
     if (daysUntilCheckIn < 2) return "Cannot cancel within 48 hours of check-in";
+    if (status === 'cancelled') return "This booking is already cancelled";
     return null;
   };
 
@@ -157,8 +159,8 @@ export default function MyBookings() {
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
-                    ) : b.status === 'confirmed' && (
-                      <Button variant="outline" size="sm" disabled className="gap-2">
+                    ) : (
+                      <Button variant="outline" size="sm" disabled className="gap-2" title={getCancelReason(b.check_in_date, b.status) || 'Cannot cancel'}>
                         <X className="h-4 w-4" />
                         Cannot Cancel
                       </Button>

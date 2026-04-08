@@ -83,6 +83,7 @@ export default function HotelDetail() {
       room_type: roomType,
       total_price: totalPrice,
       guest_phone: guestPhone,
+      status: 'confirmed',
     });
 
     if (error) {
