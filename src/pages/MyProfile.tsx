@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { differenceInDays, format } from 'date-fns';
+import { ProfilePhotoUpload } from '@/components/ProfilePhotoUpload';
 import { 
   User, 
   Mail, 
@@ -31,6 +32,7 @@ interface UserProfile {
   phone?: string;
   created_at: string;
   id: string;
+  profile_photo?: string;
 }
 
 interface BookingWithHotel {
@@ -74,6 +76,42 @@ export default function MyProfile() {
       });
     } else {
       setUserProfile(data as UserProfile);
+    }
+  };
+
+  const handleProfilePhotoUpdate = async (photoUrl: string) => {
+    if (!user) return;
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          full_name: userProfile?.full_name || user.user_metadata?.full_name || 'User',
+          email: userProfile?.email || user.email || '',
+          phone: userProfile?.phone || user.user_metadata?.phone || '',
+          profile_photo: photoUrl,
+          created_at: userProfile?.created_at || user.created_at
+        });
+
+      if (error) {
+        console.error('Error updating profile photo:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to update profile photo.',
+          variant: 'destructive',
+        });
+      } else {
+        // Update local state
+        setUserProfile(prev => prev ? { ...prev, profile_photo: photoUrl } : null);
+      }
+    } catch (error) {
+      console.error('Error updating profile photo:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update profile photo.',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -147,7 +185,7 @@ export default function MyProfile() {
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex flex-col items-center md:items-start">
                 <Avatar className="h-24 w-24 mb-4">
-                  <AvatarImage src={user?.user_metadata?.avatar_url} />
+                  <AvatarImage src={userProfile?.profile_photo || user?.user_metadata?.avatar_url} />
                   <AvatarFallback className="text-2xl">
                     {userProfile?.full_name?.charAt(0) || 'U'}
                   </AvatarFallback>
@@ -191,6 +229,25 @@ export default function MyProfile() {
                   </div>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Profile Photo Upload */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              Profile Photo
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center">
+              <ProfilePhotoUpload
+                currentPhoto={userProfile?.profile_photo}
+                fullName={userProfile?.full_name}
+                onPhotoChange={handleProfilePhotoUpdate}
+              />
             </div>
           </CardContent>
         </Card>
