@@ -273,7 +273,7 @@ export default function MyProfile() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button variant="outline" className="h-auto p-4 flex flex-col gap-2" onClick={() => window.location.href = '/my-bookings'}>
                 <FileText className="h-6 w-6" />
                 <span>My Bookings</span>
@@ -281,10 +281,6 @@ export default function MyProfile() {
               <Button variant="outline" className="h-auto p-4 flex flex-col gap-2" onClick={() => window.location.href = '/'}>
                 <Hotel className="h-6 w-6" />
                 <span>Browse Hotels</span>
-              </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col gap-2" onClick={() => supabase.auth.signOut()}>
-                <LogOut className="h-6 w-6" />
-                <span>Sign Out</span>
               </Button>
             </div>
           </CardContent>
