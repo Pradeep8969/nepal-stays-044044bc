@@ -20,9 +20,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const checkAdmin = async (userId: string) => {
-    const { data } = await supabase.rpc('has_role', { _user_id: userId, _role: 'admin' });
-    setIsAdmin(!!data);
+  const checkAdmin = async (user: User) => {
+    // Check if user has admin role in metadata
+    if (user?.user_metadata?.role === 'admin') {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
   };
 
   useEffect(() => {
@@ -30,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        setTimeout(() => checkAdmin(session.user.id), 0);
+        checkAdmin(session.user);
       } else {
         setIsAdmin(false);
       }
@@ -41,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        checkAdmin(session.user.id);
+        checkAdmin(session.user);
       }
       setLoading(false);
     });
@@ -61,14 +65,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     // Create profile record with phone number
     if (!error && data.user) {
+      const profileData: any = {
+        user_id: data.user.id,
+        full_name: fullName,
+        email: email,
+      };
+      
+      // Only add phone if it exists and column exists
+      if (phone) {
+        profileData.phone = phone;
+      }
+      
       await supabase
         .from('profiles')
-        .upsert({
-          user_id: data.user.id,
-          full_name: fullName,
-          email: email,
-          phone: phone || null,
-        });
+        .upsert(profileData);
     }
     
     // If signup successful but no email confirmation needed (user already confirmed)
