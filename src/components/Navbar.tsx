@@ -26,7 +26,6 @@ export default function Navbar() {
         {/* Desktop nav */}
         <div className="hidden items-center gap-4 md:flex">
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">Hotels</Link>
-          {user && <Link to="/my-bookings" className="text-sm text-muted-foreground hover:text-foreground">My Bookings</Link>}
           {user && <Link to="/my-profile" className="text-sm text-muted-foreground hover:text-foreground">My Profile</Link>}
           {isAdmin && <Link to="/admin" className="text-sm text-muted-foreground hover:text-foreground">Admin</Link>}
           <ThemeToggle />
@@ -47,7 +46,6 @@ export default function Navbar() {
         <div className="border-t px-4 py-3 md:hidden">
           <div className="flex flex-col gap-3">
             <Link to="/" className="text-sm text-muted-foreground" onClick={() => setMenuOpen(false)}>Hotels</Link>
-            {user && <Link to="/my-bookings" className="text-sm text-muted-foreground" onClick={() => setMenuOpen(false)}>My Bookings</Link>}
             {user && <Link to="/my-profile" className="text-sm text-muted-foreground" onClick={() => setMenuOpen(false)}>My Profile</Link>}
             {isAdmin && <Link to="/admin" className="text-sm text-muted-foreground" onClick={() => setMenuOpen(false)}>Admin</Link>}
             <div className="flex items-center justify-between">

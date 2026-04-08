@@ -12,6 +12,7 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function Auth() {
     setLoading(true);
 
     if (isSignUp) {
-      const { error } = await signUp(email, password, fullName);
+      const { error } = await signUp(email, password, fullName, phone);
       if (error) {
         toast({ title: 'Error', description: error.message, variant: 'destructive' });
       } else {
@@ -60,13 +61,19 @@ export default function Auth() {
                 <Input id="name" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Your name" required />
               </div>
             )}
+            {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input id="phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+977-XXXXXXXXX" required />
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} />
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="·" required minLength={6} />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Sign In'}

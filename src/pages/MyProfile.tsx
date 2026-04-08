@@ -84,8 +84,7 @@ export default function MyProfile() {
       .from('bookings')
       .select('id, check_in_date, check_out_date, guests, room_type, total_price, status, created_at, guest_phone, hotels(name, location, image_url)')
       .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(5);
+      .order('created_at', { ascending: false });
     
     setRecentBookings((data as unknown as BookingWithHotel[]) || []);
   };
@@ -196,12 +195,12 @@ export default function MyProfile() {
           </CardContent>
         </Card>
 
-        {/* Recent Bookings */}
+        {/* My Bookings */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Hotel className="h-5 w-5" />
-              Recent Bookings
+              My Bookings
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -260,11 +259,6 @@ export default function MyProfile() {
                     </div>
                   </div>
                 ))}
-                <div className="text-center pt-4">
-                  <Button variant="outline" onClick={() => window.location.href = '/my-bookings'}>
-                    View All Bookings
-                  </Button>
-                </div>
               </div>
             )}
           </CardContent>
@@ -279,11 +273,7 @@ export default function MyProfile() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="h-auto p-4 flex flex-col gap-2" onClick={() => window.location.href = '/my-bookings'}>
-                <FileText className="h-6 w-6" />
-                <span>My Bookings</span>
-              </Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button variant="outline" className="h-auto p-4 flex flex-col gap-2" onClick={() => window.location.href = '/'}>
                 <Hotel className="h-6 w-6" />
                 <span>Browse Hotels</span>

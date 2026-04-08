@@ -7,7 +7,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName: string, phone?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -49,15 +49,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, fullName: string) => {
+  const signUp = async (email: string, password: string, fullName: string, phone?: string) => {
     const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: { 
-        data: { full_name: fullName },
+        data: { full_name: fullName, phone: phone },
         emailRedirectTo: `${window.location.origin}/auth`
       },
     });
+    
+    // Create profile record with phone number
+    if (!error && data.user) {
+      await supabase
+        .from('profiles')
+        .upsert({
+          user_id: data.user.id,
+          full_name: fullName,
+          email: email,
+          phone: phone || null,
+        });
+    }
     
     // If signup successful but no email confirmation needed (user already confirmed)
     if (!error && data.user && !data.user.email_confirmed_at) {
