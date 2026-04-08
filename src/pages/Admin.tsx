@@ -60,20 +60,10 @@ export default function Admin() {
   };
 
   const fetchBookings = async () => {
+    // Simple query without joins to avoid 400 errors
     const { data } = await supabase
       .from('bookings')
-      .select(`
-        *,
-        hotels (
-          name,
-          location,
-          image_url
-        ),
-        profiles (
-          full_name,
-          email
-        )
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
     setBookings(data || []);
   };
@@ -305,18 +295,18 @@ export default function Admin() {
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold text-lg">{booking.hotels?.name}</h3>
+                              <h3 className="font-semibold text-lg">Hotel ID: {booking.hotel_id}</h3>
                               <Badge variant="outline">{booking.status}</Badge>
                             </div>
                             <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
-                              <div><span className="font-medium">Guest:</span> {booking.profiles?.full_name || 'Unknown'}</div>
-                              <div><span className="font-medium">Email:</span> {booking.profiles?.email || 'N/A'}</div>
+                              <div><span className="font-medium">User ID:</span> {booking.user_id}</div>
                               <div><span className="font-medium">Check-in:</span> {format(new Date(booking.check_in_date), 'MMM d, yyyy')}</div>
                               <div><span className="font-medium">Check-out:</span> {format(new Date(booking.check_out_date), 'MMM d, yyyy')}</div>
                               <div><span className="font-medium">Guests:</span> {booking.guests}</div>
                               <div><span className="font-medium">Room Type:</span> {booking.room_type}</div>
                               <div><span className="font-medium">Phone:</span> {booking.guest_phone}</div>
                               <div><span className="font-medium">Total:</span> ${booking.total_price}</div>
+                              <div><span className="font-medium">Created:</span> {format(new Date(booking.created_at), 'MMM d, yyyy')}</div>
                             </div>
                           </div>
                         </div>
