@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { Building, MapPin, Phone, Mail, Star, Upload, CheckCircle, Hotel } from 'lucide-react';
 
 interface HotelFormData {
@@ -53,12 +54,33 @@ export default function ListYourHotel() {
     setIsSubmitting(true);
 
     try {
-      // Here you would normally send this data to your backend/Supabase
-      // For now, we'll simulate the submission
-      console.log('Hotel submission data:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Save to hotel_submissions table
+      const { data, error } = await supabase
+        .from('hotel_submissions')
+        .insert({
+          hotel_name: formData.name,
+          location: formData.location,
+          description: formData.description,
+          rating: formData.rating ? parseInt(formData.rating) : null,
+          image_url: formData.image_url,
+          contact_phone: formData.contact_phone,
+          contact_email: formData.contact_email,
+          website: formData.website,
+          amenities: formData.amenities,
+          room_types: formData.room_types,
+          price_range: formData.price_range,
+          establishment_year: formData.establishment_year,
+          special_features: formData.special_features,
+          submission_data: formData // Store all form data as JSON
+        })
+        .select();
+
+      if (error) {
+        console.error('Submission error:', error);
+        throw error;
+      }
+
+      console.log('Hotel submission successful:', data);
       
       setIsSubmitted(true);
       toast({
@@ -83,6 +105,7 @@ export default function ListYourHotel() {
         special_features: ''
       });
     } catch (error) {
+      console.error('Submission error:', error);
       toast({
         title: 'Submission Failed',
         description: 'There was an error submitting your hotel. Please try again.',
